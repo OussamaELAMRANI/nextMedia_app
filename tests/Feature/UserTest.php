@@ -15,10 +15,10 @@ class UserTest extends TestCase
 
 	/**
      * A basic test example.
-     *
+     * @test
      * @return void
      */
-    public function testExample()
+    public function addUser()
     {
         $this->assertTrue(true);
     }

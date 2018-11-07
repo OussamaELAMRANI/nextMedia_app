@@ -18,7 +18,7 @@ class Client extends Model
 	 */
 	public function user()
 	{
-		return $this->belongsTo(User::class, 'userId');
+		return $this->belongsTo(User::class);
     }
 
 	/**
@@ -38,8 +38,6 @@ class Client extends Model
 	{
 		return $this->hasMany(Order::class, 'id');
 	}
-
-
 
 
 }
