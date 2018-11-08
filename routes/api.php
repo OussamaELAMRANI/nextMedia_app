@@ -25,7 +25,20 @@ Route::group(['prefix' => 'product'], function () {
 		Route::post('/new', 'Api\ProductController@store');
 		Route::put('/{slug}/update', 'Api\ProductController@update');
 		Route::delete('/{slug}/delete', 'Api\ProductController@delete');
+
+		// Close Order ...
+		Route::post('/{orderId}/close', 'Api\ProductController@closeOrder');
+
 	});
 
 
+});
+
+Route::group(['prefix' => 'order'], function () {
+
+	Route::middleware(['auth:api', 'scope:customer'])->group(function () {
+
+		Route::post('/new', 'Api\OrderController@store');
+
+	});
 });

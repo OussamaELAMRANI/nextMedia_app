@@ -29,7 +29,34 @@ class Order extends Model
 	 */
 	public function product()
 	{
-		return $this->belongsToMany(Product::class);
+		return $this->belongsToMany(Product::class, 'order_items',
+			'orderId', 'productId');
+	}
+
+	/**
+	 * Save All Order Items for this Client
+	 *
+	 * @param array $items
+	 * @param $userId
+	 * @return array
+	 */
+	public function saveItems(array $items, $orderId)
+	{
+		$orderId = array_fill(0, count($items), $orderId);
+
+		$orderItem = array_map(function ($itm, $id) {
+			return array_merge($itm, ['orderId' => $id]);
+		}, $items, $orderId);
+
+		$this->product()->attach($orderItem);
+
+		// Updating original Inventory
+		foreach ($items as $prod) {
+			$upProduct = $this->product()->find($prod['productId']);
+			$upProduct->inventory -= $prod['quantity'];
+			$upProduct->save();
+		}
+		return $this;
 	}
 
 }

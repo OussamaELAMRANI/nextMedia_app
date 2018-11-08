@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Order;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -40,8 +41,8 @@ class ProductController extends Controller
 	{
 		$clientId = $req->user()->client()->first()->id;
 		$myProducts = Product::where('clientId', $clientId)->get();
-		if($myProducts)
-			return response()->json($myProducts,200);
+		if ($myProducts)
+			return response()->json($myProducts, 200);
 
 		return $this->notFoundResponse();
 	}
@@ -117,6 +118,25 @@ class ProductController extends Controller
 		}
 
 		return $this->notFoundResponse();
+	}
+
+	/**
+	 * The Seller Cans close the Order
+	 *
+	 * @param $orderId
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function closeOrder($orderId)
+	{
+		$order = Order::find($orderId);
+
+		if ($order && $order->where('closed', '==', 0)->first()) {
+			$order->closed = 1;
+			$order->save();
+			return response()->json(['message' => 'Successfully closed !', 'Order' => $order]);
+		}
+
+		return response()->json(['message' => 'Order not found or already closed !']);
 	}
 
 	/**
