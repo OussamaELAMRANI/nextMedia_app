@@ -54,8 +54,9 @@ class OrderController extends Controller
 
 		return response()->json([
 			"message" => "Successfully Added",
-			"Order" => $newOrder->load('product', 'client')
-			]);
+			"Order" => $newOrder->load('product', 'client'),
+			"total" => $this->calcTotal($factoryProduct)
+		]);
 
 	}
 
@@ -126,4 +127,20 @@ class OrderController extends Controller
 		return $new;
 	}
 
+	/**
+	 * Get Total of this Order
+	 *
+	 * @param $products
+	 * @return float
+	 */
+	public function calcTotal($products)
+	{
+		$total = 0;
+		foreach ($products as $product) {
+
+			$price = Product::where('id', $product['productId'])->first()->price;
+			$total += $price *  $product['quantity'];
+		}
+		return $total;
+	}
 }

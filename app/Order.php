@@ -38,7 +38,7 @@ class Order extends Model
 	 *
 	 * @param array $items
 	 * @param $userId
-	 * @return array
+	 * @return double Total
 	 */
 	public function saveItems(array $items, $orderId)
 	{
